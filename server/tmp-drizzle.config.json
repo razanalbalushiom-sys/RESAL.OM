@@ -1,0 +1,8 @@
+{
+  "schema": "./db/schema.ts",
+  "out": "./drizzle",
+  "dialect": "postgresql",
+  "connection": {
+    "url": "postgresql://postgres:resal%401m71366332@db.segydollxwwhnsygyhyg.supabase.co:5432/postgres"
+  }
+}

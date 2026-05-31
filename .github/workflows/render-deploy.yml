@@ -1,0 +1,27 @@
+name: Render Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        working-directory: server
+        run: npm ci
+      - name: Run migrations
+        working-directory: server
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npx drizzle-kit migrate --preview=false
+      - name: Trigger Render deploy
+        if: ${{ secrets.RENDER_WEBHOOK_URL != '' }}
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d '{}' "${{ secrets.RENDER_WEBHOOK_URL }}"
